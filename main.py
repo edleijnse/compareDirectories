@@ -59,14 +59,42 @@ class ConfigurateTaggerBiz(tk.Frame):
             mydir = open_directory(self.filearray[0], "directory to compare to")
             btn_compare_to_dir_txt_var.set(mydir)
             self.filearray[1]=mydir
+            save_file(self)
 
         def compareToTextClicked():
             print("compare to text clicked")
             mydir = "this is the directory to compare to"
             tk.messagebox.showinfo("compare to directory", mydir)
             tk.Frame.__init__(self, master)
+            save_file(self)
+
+        def save_file(self):
+            """Save the current file as a new file."""
+
+            # filepath = fd.asksaveasfilename(
+            #    defaultextension="txt",
+            #    filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")],
+            # )
+            filepath = "compareDirectoriesconfig.txt"
+            if not filepath:
+                return
+            with open(filepath, "w") as output_file:
+                output_file.write(self.filearray[0] + "\n")
+                output_file.write(self.filearray[1] + "\n")
+            output_file.close()
+
+        def read_file(self):
+            filepath = "compareDirectoriesconfig.txt"
+            with open(filepath, "r") as input_file:
+                ii = 0
+                for x in input_file:
+                    self.filearray[ii] = str(x).strip("\n")
+                    ii = ii + 1
+            input_file.close()
+
         self.grid
         self.filearray = ["", "", "", "", "", "", "", ""]
+        read_file(self)
         self.fr_buttons = tk.Frame(master, relief=tk.RAISED, bd=2)
         self.btn_compare_from_dir = tk.Button(self.fr_buttons, text="COMPARE FROM directory",
                                               command=compareFromClicked, highlightbackground="cyan", bg="cyan")
