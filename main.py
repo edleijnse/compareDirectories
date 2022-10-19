@@ -32,41 +32,42 @@ def print_diff_files(dcmp):
 class ConfigurateTaggerBiz(tk.Frame):
 
     def __init__(self, master=None):
-        def lightroomClicked():
-           print("Lightroom clicked")
-           mydir = open_directory(self.filearray[1], "YOUR Lightroom directory")
-           btn_lightroom_dir_txt_var = tk.StringVar()
-           btn_lightroom_dir_txt_var.set(mydir)
-           self.directory_02_txt = mydir
 
-        def lightroomTextClicked():
-            print("LightroomText clicked")
-            mydir = "this is the directory where you original Lightroom files are. Your MASTER directory!"
-            tk.messagebox.showinfo("Lightroom directory", mydir)
+        def open_directory(mydir, mytitle):
+            """Open a file for editing."""
 
-        tk.Frame.__init__(self, master)
+            dirpath = fd.askdirectory(initialdir=mydir, title=mytitle, parent=None)
+            print(dirpath)
+
+            if not dirpath:
+                return
+            return dirpath
+
+        def compareFromClicked():
+            print("compare from clicked")
+            mydir = open_directory(self.filearray[0], "directory to compare from")
+            btn_compare_from_dir_txt_var.set(mydir)
+            self.filearray[0]=mydir
+
+        def compareFromTextClicked():
+            print("compare from text clicked")
+            mydir = "this is the directory to compare from"
+            tk.messagebox.showinfo("compare from directory", mydir)
+            tk.Frame.__init__(self, master)
         self.grid
         self.filearray = ["", "", "", "", "", "", "", ""]
         self.fr_buttons = tk.Frame(master, relief=tk.RAISED, bd=2)
-        self.btn_lightroom_dir = tk.Button(self.fr_buttons, text="YOUR Lightroom directory",
-                                           command=lightroomClicked, highlightbackground="cyan", bg="cyan")
-        btn_lightroom_dir_txt_var = tk.StringVar()
-        self.btn_lightroom_dir_txt = tk.Button(self.fr_buttons, textvariable=btn_lightroom_dir_txt_var,
-                                               command=lightroomTextClicked)
-        btn_lightroom_dir_txt_var.set(self.filearray[1])
-        self.btn_lightroom_dir.grid(row=0, column=0, sticky="ew", padx=5)
+        self.btn_compare_from_dir = tk.Button(self.fr_buttons, text="COMPARE FROM directory",
+                                              command=compareFromClicked, highlightbackground="cyan", bg="cyan")
+        btn_compare_from_dir_txt_var = tk.StringVar()
+        self.btn_lightroom_dir_txt = tk.Button(self.fr_buttons, textvariable=btn_compare_from_dir_txt_var,
+                                               command=compareFromTextClicked)
+        btn_compare_from_dir_txt_var.set(self.filearray[0])
+        self.btn_compare_from_dir.grid(row=0, column=0, sticky="ew", padx=5)
         self.btn_lightroom_dir_txt.grid(row=0, column=1, sticky="ew", padx=5)
         self.fr_buttons.grid(row=0, column=0, sticky="ns")
 
-        def open_directory(mydir, mytitle):
-           """Open a file for editing."""
 
-           dirpath = fd.askdirectory(initialdir=mydir, title=mytitle, parent=None)
-           print(dirpath)
-
-           if not dirpath:
-              return
-           return dirpath
 
 
 
