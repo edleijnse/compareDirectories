@@ -15,6 +15,8 @@ def print_hi(name):
     print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
 
 def print_diff_files(dcmp):
+    print("left directory: %s" %(dcmp.left))
+    print("right direcory: %s" %(dcmp.right))
     common_files = sorted(dcmp.common_files)
     for name in common_files:
         print("common_file %s found in %s and %s" % (name, dcmp.left,
@@ -123,8 +125,8 @@ class ConfigurateTaggerBiz(tk.Frame):
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     # print_hi('PyCharm')
-    # dcmp = filecmp.dircmp('E:\Dropbox\Ger 2022-09-17 selektiert','E:\Dropbox\Ger 2022-09-17')
-    # print_diff_files(dcmp)
+    dcmp = filecmp.dircmp('E:\Dropbox\Ger 2022-09-17 selektiert','E:\Dropbox\Ger 2022-09-17')
+    print_diff_files(dcmp)
     root = tk.Tk()
     root.wm_title("compare directories control centre")
     myConf = ConfigurateTaggerBiz(root)
