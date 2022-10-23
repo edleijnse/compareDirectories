@@ -15,12 +15,12 @@ def print_hi(name):
     print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
 
 def print_diff_files(dcmp):
-    print("left directory: %s" %(dcmp.left))
-    print("right direcory: %s" %(dcmp.right))
+    # print("left directory: %s" %(dcmp.left))
+    # print("right direcory: %s" %(dcmp.right))
     common_files = sorted(dcmp.common_files)
-    for name in common_files:
-        print("common_file %s found in %s and %s" % (name, dcmp.left,
-              dcmp.right))
+   # for name in common_files:
+   #     print("common_file %s found in %s and %s" % (name, dcmp.left,
+   #           dcmp.right))
     left_only_files = sorted(dcmp.left_only)
     for name in left_only_files:
         print("left_only_file %s found in %s" % (name, dcmp.left))
@@ -124,12 +124,15 @@ class ConfigurateTaggerBiz(tk.Frame):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    # print_hi('PyCharm')
-    dcmp = filecmp.dircmp('E:\Dropbox\Ger 2022-09-17 selektiert','E:\Dropbox\Ger 2022-09-17')
-    print_diff_files(dcmp)
     root = tk.Tk()
     root.wm_title("compare directories control centre")
     myConf = ConfigurateTaggerBiz(root)
+    dirFrom = myConf.filearray[0]
+    dirTo = myConf.filearray[1]
+    # todo 20221023 button to start compare process
     root.mainloop()
+    dcmp = filecmp.dircmp(dirFrom, dirTo)
+    print_diff_files(dcmp)
+
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
