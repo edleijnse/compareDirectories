@@ -9,26 +9,54 @@ from tkinter import filedialog as fd, DISABLED
 from tkinter import messagebox
 from tkinter import simpledialog
 from filecmp import dircmp
+import shutil
 
 def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
     print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
 
-def print_diff_files(dcmp):
+def process_diff_files_left(dcmp, fromdirectory, todirectory, diffdirectory, appendfile):
     # print("left directory: %s" %(dcmp.left))
     # print("right direcory: %s" %(dcmp.right))
+    filepath = diffdirectory + "/compareDirectoriesResult.txt"
+    if not filepath:
+        return
+    if (appendfile==True):
+        writemode = "a"
+    else:
+        writemode = "w"
+    with open(filepath,writemode) as output_file:
+        left_only_files = sorted(dcmp.left_only)
+        for name in left_only_files:
+            if ("." in name):
+               output_file.write("left_only_file %s found in %s" % (name, dcmp.left) + "\n")
+    output_file.close()
     common_files = sorted(dcmp.common_files)
    # for name in common_files:
    #     print("common_file %s found in %s and %s" % (name, dcmp.left,
    #           dcmp.right))
     left_only_files = sorted(dcmp.left_only)
     for name in left_only_files:
-        print("left_only_file %s found in %s" % (name, dcmp.left))
+        if ("." in name):
+           newdirectoryname = dcmp.left
+           newdirectoryname = newdirectoryname.replace(fromdirectory,diffdirectory)
+
+           print("left_only_file %s found in %s" % (name, dcmp.left) + " newdirectory: " + newdirectoryname)
+           try:
+               os.makedirs(newdirectoryname)
+           # except FileExistError
+           except OSError as e:
+               dummy = 1
+           oldfilename = dcmp.left + "/" + name
+           newfilename = newdirectoryname + "/" + name
+           shutil.copy(oldfilename,newfilename)
+        else:
+            print("left_only_directory %s found in %s" % (name, dcmp.left))
     right_only_files = sorted(dcmp.right_only)
     for name in right_only_files:
         print("right_only_file %s found in %s " % (name, dcmp.left))
     for sub_dcmp in dcmp.subdirs.values():
-        print_diff_files(sub_dcmp)
+        process_diff_files_left(sub_dcmp, fromdirectory, todirectory, diffdirectory, True)
 
 
 class ConfigurateTaggerBiz(tk.Frame):
@@ -70,6 +98,29 @@ class ConfigurateTaggerBiz(tk.Frame):
             tk.Frame.__init__(self, master)
             save_file(self)
 
+        def compareResultClicked():
+            print("compare result clicked")
+            mydir = open_directory(self.filearray[2], "directory result")
+            btn_compare_result_txt_var.set(mydir)
+            self.filearray[2] = mydir
+            save_file(self)
+
+        def compareResultTextClicked():
+            print("compare result clicked")
+            mydir = "this is the directory to save the result"
+            tk.messagebox.showinfo("compare result", mydir)
+            tk.Frame.__init__(self, master)
+            save_file(self)
+        def compareStartClicked():
+            print("compare start clicked")
+            mydir = "start compare"
+            tk.messagebox.showinfo("compare", mydir)
+            tk.Frame.__init__(self, master)
+            dcmp = filecmp.dircmp(self.filearray[0], self.filearray[1])
+            process_diff_files_left(dcmp, self.filearray[0], self.filearray[1],self.filearray[2], False)
+            mydir = "compare ended"
+            tk.messagebox.showinfo("compare", mydir)
+
         def save_file(self):
             """Save the current file as a new file."""
 
@@ -83,6 +134,7 @@ class ConfigurateTaggerBiz(tk.Frame):
             with open(filepath, "w") as output_file:
                 output_file.write(self.filearray[0] + "\n")
                 output_file.write(self.filearray[1] + "\n")
+                output_file.write(self.filearray[2] + "\n")
             output_file.close()
 
         def read_file(self):
@@ -116,6 +168,19 @@ class ConfigurateTaggerBiz(tk.Frame):
         self.btn_compare_to_dir.grid(row=1, column=0, sticky="ew", padx=5)
         self.btn_compare_to_dir_txt.grid(row=1, column=1, sticky="ew", padx=5)
         #
+        self.btn_compare_result_dir = tk.Button(self.fr_buttons, text="COMPARE result",
+                                            command=compareResultClicked, highlightbackground="cyan", bg="cyan")
+        btn_compare_result_txt_var = tk.StringVar()
+        self.btn_compare_result_txt = tk.Button(self.fr_buttons, textvariable=btn_compare_result_txt_var,
+                                                command=compareResultTextClicked)
+        btn_compare_result_txt_var.set(self.filearray[2])
+        self.btn_compare_result_dir.grid(row=2, column=0, sticky="ew", padx=5)
+        self.btn_compare_result_txt.grid(row=2, column=1, sticky="ew", padx=5)
+        #
+        self.btn_compare_start = tk.Button(self.fr_buttons, text="start compare",
+                                                command=compareStartClicked, highlightbackground="cyan", bg="cyan")
+        self.btn_compare_start.grid(row=3, column=0, sticky="ew", padx=5)
+        #
         self.fr_buttons.grid(row=0, column=0, sticky="ns")
 
 
@@ -131,8 +196,8 @@ if __name__ == '__main__':
     dirTo = myConf.filearray[1]
     # todo 20221023 button to start compare process
     root.mainloop()
-    dcmp = filecmp.dircmp(dirFrom, dirTo)
-    print_diff_files(dcmp)
+    # dcmp = filecmp.dircmp(dirFrom, dirTo)
+    # process_diff_files_left(dcmp)
 
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
