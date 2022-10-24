@@ -15,27 +15,11 @@ def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
     print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
 
-def process_diff_files_left(dcmp, fromdirectory, todirectory, diffdirectory, appendfile):
+def process_diff_files_left(dcmp, fromdirectory, todirectory, diffdirectory):
     dcmp = filecmp.dircmp(dcmp.left, dcmp.right)
     # print("left directory: %s" %(dcmp.left))
     # print("right direcory: %s" %(dcmp.right))
-    filepath = diffdirectory + "/compareDirectoriesResult.txt"
-    if not filepath:
-        return
-    if (appendfile==True):
-        writemode = "a"
-    else:
-        writemode = "w"
-    with open(filepath,writemode) as output_file:
-        left_only_files = sorted(dcmp.left_only)
-        for name in left_only_files:
-            if ("." in name):
-               output_file.write("left_only_file %s found in %s" % (name, dcmp.left) + "\n")
-    output_file.close()
-    common_files = sorted(dcmp.common_files)
-   # for name in common_files:
-   #     print("common_file %s found in %s and %s" % (name, dcmp.left,
-   #           dcmp.right))
+
     left_only_files = sorted(dcmp.left_only)
     for name in left_only_files:
         if ("." in name):
@@ -53,8 +37,16 @@ def process_diff_files_left(dcmp, fromdirectory, todirectory, diffdirectory, app
            shutil.copy(oldfilename,newfilename)
         else:
             print("left_only_directory %s found in %s" % (name, dcmp.left))
-            dcmp2 = filecmp.dircmp(dcmp.left + "/" + name, dcmp.right + "/" + name)
-            process_diff_files_left(dcmp2, fromdirectory, todirectory, diffdirectory, True)
+            # copy directory to target
+            # Source path
+            src = dcmp.left + "/" + name
+
+            # Destination path
+            dest = dcmp.left + "/" + name
+            dest = dest.replace(fromdirectory,diffdirectory)
+            # Copy the content of
+            # source to destination
+            destination = shutil.copytree(src, dest)
     for sub_dcmp in dcmp.subdirs.values():
         process_diff_files_left(sub_dcmp, fromdirectory, todirectory, diffdirectory, True)
 
@@ -117,7 +109,7 @@ class ConfigurateTaggerBiz(tk.Frame):
             tk.messagebox.showinfo("compare", mydir)
             tk.Frame.__init__(self, master)
             dcmp = filecmp.dircmp(self.filearray[0], self.filearray[1])
-            process_diff_files_left(dcmp, self.filearray[0], self.filearray[1],self.filearray[2], False)
+            process_diff_files_left(dcmp, self.filearray[0], self.filearray[1],self.filearray[2])
             mydir = "compare ended"
             tk.messagebox.showinfo("compare", mydir)
 
