@@ -16,6 +16,7 @@ def print_hi(name):
     print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
 
 def process_diff_files_left(dcmp, fromdirectory, todirectory, diffdirectory, appendfile):
+    dcmp = filecmp.dircmp(dcmp.left, dcmp.right)
     # print("left directory: %s" %(dcmp.left))
     # print("right direcory: %s" %(dcmp.right))
     filepath = diffdirectory + "/compareDirectoriesResult.txt"
@@ -52,9 +53,8 @@ def process_diff_files_left(dcmp, fromdirectory, todirectory, diffdirectory, app
            shutil.copy(oldfilename,newfilename)
         else:
             print("left_only_directory %s found in %s" % (name, dcmp.left))
-    right_only_files = sorted(dcmp.right_only)
-    for name in right_only_files:
-        print("right_only_file %s found in %s " % (name, dcmp.left))
+            dcmp2 = filecmp.dircmp(dcmp.left + "/" + name, dcmp.right + "/" + name)
+            process_diff_files_left(dcmp2, fromdirectory, todirectory, diffdirectory, True)
     for sub_dcmp in dcmp.subdirs.values():
         process_diff_files_left(sub_dcmp, fromdirectory, todirectory, diffdirectory, True)
 
