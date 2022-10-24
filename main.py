@@ -48,7 +48,7 @@ def process_diff_files_left(dcmp, fromdirectory, todirectory, diffdirectory):
             # source to destination
             destination = shutil.copytree(src, dest)
     for sub_dcmp in dcmp.subdirs.values():
-        process_diff_files_left(sub_dcmp, fromdirectory, todirectory, diffdirectory, True)
+        process_diff_files_left(sub_dcmp, fromdirectory, todirectory, diffdirectory)
 
 
 class ConfigurateTaggerBiz(tk.Frame):
