@@ -49,6 +49,15 @@ def process_diff_files_left(dcmp, fromdirectory, todirectory, diffdirectory):
             destination = shutil.copytree(src, dest)
     for sub_dcmp in dcmp.subdirs.values():
         process_diff_files_left(sub_dcmp, fromdirectory, todirectory, diffdirectory)
+def apply_diff_files(todirectory, diffdirectory):
+    # print("left directory: %s" %(dcmp.left))
+    # print("right direcory: %s" %(dcmp.right))
+    destination = shutil.copytree(diffdirectory, todirectory, dirs_exist_ok = True)
+def clear_diff_directory(diffdirectory):
+    # print("left directory: %s" %(dcmp.left))
+    # print("right direcory: %s" %(dcmp.right))
+    destination = shutil.rmtree(diffdirectory)
+    os.mkdir(diffdirectory)
 
 
 class ConfigurateTaggerBiz(tk.Frame):
@@ -113,6 +122,24 @@ class ConfigurateTaggerBiz(tk.Frame):
             mydir = "compare ended"
             tk.messagebox.showinfo("compare", mydir)
 
+        def applyCompareClicked():
+            print("apply compare clicked")
+            mydir = "start apply"
+            tk.messagebox.showinfo("compare", mydir)
+            tk.Frame.__init__(self, master)
+            apply_diff_files(self.filearray[1], self.filearray[2])
+            mydir = "end apply"
+            tk.messagebox.showinfo("compare", mydir)
+
+        def clear_diff_directoryClicked():
+            print("clear diff directory clicked")
+            mydir = "start clearing"
+            tk.messagebox.showinfo("compare", mydir)
+            tk.Frame.__init__(self, master)
+            clear_diff_directory(self.filearray[2])
+            mydir = "end apply"
+            tk.messagebox.showinfo("compare", mydir)
+
         def save_file(self):
             """Save the current file as a new file."""
 
@@ -172,6 +199,14 @@ class ConfigurateTaggerBiz(tk.Frame):
         self.btn_compare_start = tk.Button(self.fr_buttons, text="start compare",
                                                 command=compareStartClicked, highlightbackground="cyan", bg="cyan")
         self.btn_compare_start.grid(row=3, column=0, sticky="ew", padx=5)
+        #
+        self.btn_compare_start = tk.Button(self.fr_buttons, text="apply compare",
+                                           command=applyCompareClicked, highlightbackground="cyan", bg="cyan")
+        self.btn_compare_start.grid(row=4, column=0, sticky="ew", padx=5)
+        #
+        self.btn_compare_start = tk.Button(self.fr_buttons, text="empty compare",
+                                           command=clear_diff_directoryClicked, highlightbackground="cyan", bg="cyan")
+        self.btn_compare_start.grid(row=5, column=0, sticky="ew", padx=5)
         #
         self.fr_buttons.grid(row=0, column=0, sticky="ns")
 
