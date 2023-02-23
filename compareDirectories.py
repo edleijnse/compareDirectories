@@ -18,7 +18,7 @@ def print_hi(name):
 def process_diff_files_left(dcmp, fromdirectory, todirectory, diffdirectory):
     dcmp = filecmp.dircmp(dcmp.left, dcmp.right)
     # print("left directory: %s" %(dcmp.left))
-    # print("right direcory: %s" %(dcmp.right))
+    # print("right directory: %s" %(dcmp.right))
 
     left_only_files = sorted(dcmp.left_only)
     for name in left_only_files:
