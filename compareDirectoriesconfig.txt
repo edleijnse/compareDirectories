@@ -1,3 +1,2 @@
 D:/Lightroom
-V:/Lightroom
-D:/CompareResult
+D:/LightroomSync
