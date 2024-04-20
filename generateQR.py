@@ -39,7 +39,7 @@ label.pack()
 entry_text = Entry(win)
 entry_text.pack()
 # Image display
-label2 = Label(win, text="Enter QR Code")
+label2 = Label(win)
 label2.pack()
 button = Button(win, text="Generate", command=generate_qrcode)
 button.pack()
