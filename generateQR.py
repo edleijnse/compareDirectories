@@ -18,7 +18,7 @@ def generate_qrcode():
 
     # Create and save the png file naming "myqr.png"
     url.png(s+'.png', scale=6)
-
+    url.show()
 
 # Creating tkinter window
 win = Tk()
