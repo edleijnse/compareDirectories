@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<p>Click the input field to get a color picker:</p>
+
+<input type="color" id="myColorPicker" value="#ffffff">
+<p id="colorOutput"></p>
+
+<script>
+    let colorPicker = document.getElementById("myColorPicker");
+    let colorOutput = document.getElementById("colorOutput");
+
+    colorPicker.addEventListener("input", function() {
+        colorOutput.innerText = "HEX Color: " + this.value;
+    }, false);
+</script>
+
+</body>
+</html> 
