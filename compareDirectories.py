@@ -10,6 +10,7 @@ from tkinter import messagebox
 from tkinter import simpledialog
 from filecmp import dircmp
 import shutil
+from openai_image_local import get_image_content
 
 def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
